@@ -4,6 +4,9 @@
 # Ignore cred file
 app/util/cred.json
 
+# Ignore cert file
+app/util/ca-certificate.crt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
