@@ -1,6 +1,0 @@
-{
-  "connection_string": "postgresql://WorldTradeData:Scabby-Catlike-Demeanor2@postgres.nicleary.com:5432/worldtradedata",
-  "mongo_host": "db-mongodb-nyc3-59233-1cf945d4.mongo.ondigitalocean.com",
-  "mongo_username": "nicleary",
-  "mongo_password": "91Z85pHm03Q7iFy2"
-}

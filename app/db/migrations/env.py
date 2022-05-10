@@ -10,6 +10,8 @@ sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
 from app.util.cred_handler import get_secret
 from app.db.models import Base
 
+IGNORE_TABLES = []
+IGNORE_COLUMNS = []
 
 def include_object(object, name, type_, reflected, compare_to):
     """
