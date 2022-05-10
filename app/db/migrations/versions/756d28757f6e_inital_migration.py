@@ -1,13 +1,13 @@
 """Inital migration
-Revision ID: a0dea2349cec
+Revision ID: 756d28757f6e
 Revises: 
-Create Date: 2022-05-09 20:59:43.286854
+Create Date: 2022-05-09 21:50:07.523921
 """
 from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic
-revision = 'a0dea2349cec'
+revision = '756d28757f6e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('country_id', sa.Integer(), nullable=True),
     sa.Column('name', sa.String(length=64), nullable=False),
-    sa.Column('iso', sa.String(length=16), nullable=False),
+    sa.Column('iso', sa.String(length=16), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_country_country_id'), 'country', ['country_id'], unique=True)
@@ -76,6 +76,7 @@ def upgrade() -> None:
     sa.Column('cif_value', sa.Integer(), nullable=True),
     sa.Column('fob_value', sa.Integer(), nullable=True),
     sa.Column('est_code', sa.Integer(), nullable=True),
+    sa.Column('inserted', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['alt_quantity_desc_id'], ['quantity_code.id'], ),
     sa.ForeignKeyConstraint(['commodity_id'], ['commodity.id'], ),
     sa.ForeignKeyConstraint(['partner_2_id'], ['country.id'], ),

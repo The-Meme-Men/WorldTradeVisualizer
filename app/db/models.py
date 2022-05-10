@@ -1,7 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, Float, UniqueConstraint, LargeBinary, \
-    Table, DateTime, Date, Text, Enum, null, JSON
-from sqlalchemy.dialects.mysql import LONGTEXT
+from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime
 from sqlalchemy.orm import relation, relationship
 import datetime
 import enum
@@ -18,7 +16,7 @@ class Country(Base, PrimaryKeyBase):
     # Country IDs from comtrade
     country_id = Column(Integer, unique=True, index=True)
     name = Column(String(length=64), unique=True, nullable=False, index=True)
-    iso = Column(String(length=16), unique=True, nullable=False, index=True)
+    iso = Column(String(length=16), unique=True, nullable=True, index=True)
 
 
 class Commodity(Base, PrimaryKeyBase):
@@ -61,13 +59,13 @@ class TradeStat(Base, PrimaryKeyBase):
     rg = relationship(RGCode)
 
     reporter_id = Column(Integer, ForeignKey('country.id'), index=True)
-    reporter = relationship(Country)
+    reporter = relationship(Country, foreign_keys=[reporter_id])
 
     partner_id = Column(Integer, ForeignKey('country.id'), index=True)
-    partner = relationship(Country)
+    partner = relationship(Country, foreign_keys=[partner_id])
 
     partner_2_id = Column(Integer, ForeignKey('country.id'), nullable=True, index=True)
-    partner_2 = relationship(Country)
+    partner_2 = relationship(Country, foreign_keys=[partner_2_id])
 
     # TODO: Change customs to a separate table
     customs_code = Column(String(), nullable=True)
@@ -83,11 +81,11 @@ class TradeStat(Base, PrimaryKeyBase):
 
     # Information about the quantity
     quantity_desc_id = Column(Integer, ForeignKey('quantity_code.id'), nullable=True)
-    quantity_desc = relationship(QuantityCode)
+    quantity_desc = relationship(QuantityCode, foreign_keys=[quantity_desc_id])
 
     # Apparently there's also an alt of this???
     alt_quantity_desc_id = Column(Integer, ForeignKey('quantity_code.id'), nullable=True)
-    alt_quantity_desc = relationship(QuantityCode)
+    alt_quantity_desc = relationship(QuantityCode, foreign_keys=[alt_quantity_desc_id])
 
     quantity = Column(Integer, nullable=True)
     alt_quantity = Column(Integer, nullable=True)
@@ -102,4 +100,6 @@ class TradeStat(Base, PrimaryKeyBase):
     fob_value = Column(Integer, nullable=True)
 
     est_code = Column(Integer, nullable=True)
+
+    inserted = Column(DateTime, default=datetime.datetime.now())
 
