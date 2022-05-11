@@ -11,36 +11,55 @@ class PrimaryKeyBase:
     id = Column(Integer, primary_key=True, autoincrement=True)
 
 
-class Country(Base, PrimaryKeyBase):
+class Country(Base):
     __tablename__ = 'country'
     # Country IDs from comtrade
-    country_id = Column(Integer, unique=True, index=True)
+    country_id = Column(Integer, unique=True, primary_key=True)
     name = Column(String(length=64), unique=True, nullable=False, index=True)
     iso = Column(String(length=16), unique=True, nullable=True, index=True)
 
 
-class Commodity(Base, PrimaryKeyBase):
+class Commodity(Base):
     __tablename__ = 'commodity'
     description = Column(String(length=256), unique=True, index=True)
-    # This has to be added separately and handled as a string because of the stupid comtrade API
-    comtrade_code = Column(String(length=32), unique=True, index=True)
+    comtrade_code = Column(String(length=32), unique=True, primary_key=True)
 
 
-class RGCode(Base, PrimaryKeyBase):
+class RGCode(Base):
     __tablename__ = 'rg_code'
-    # Uses primary incrementing primary key since the ones supplied by comtrade are kinda fucky
-    # This code is supplied straight from the trade stats
-    code = Column(Integer, unique=True, nullable=False, index=True)
+    code = Column(Integer, unique=True, nullable=False, primary_key=True)
     description = Column(String(64), unique=True, nullable=False)
     # Flow code supplied by excel sheet
     flow_code = Column(String(length=4), unique=True)
 
 
-class QuantityCode(Base, PrimaryKeyBase):
+class QuantityCode(Base):
     __tablename__ = 'quantity_code'
-    # Uses primary incrementing primary key since the ones supplied by comtrade are kinda fucky
-    # This code is supplied straight from the trade stats
-    code = Column(Integer, unique=True, nullable=False, index=True)
+    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    description = Column(String(64), unique=True, nullable=False)
+
+
+class MOTCode(Base):
+    __tablename__ = 'mot_code'
+    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    description = Column(String(64), unique=True, nullable=False)
+
+
+class MOSCode(Base):
+    __tablename__ = 'mos_code'
+    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    description = Column(String(64), unique=True, nullable=False)
+
+
+class CSTCode(Base):
+    __tablename__ = 'cst_code'
+    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    description = Column(String(64), unique=True, nullable=False)
+
+
+class FlowCode(Base):
+    __tablename__ = 'flow_coded'
+    code = Column(Integer, unique=True, nullable=False, primary_key=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
@@ -67,15 +86,6 @@ class TradeStat(Base, PrimaryKeyBase):
     partner_2_id = Column(Integer, ForeignKey('country.id'), nullable=True, index=True)
     partner_2 = relationship(Country, foreign_keys=[partner_2_id])
 
-    # TODO: Change customs to a separate table
-    customs_code = Column(String(), nullable=True)
-    customs_desc = Column(String(), nullable=True)
-
-    # TODO: Figure out wtf mot is
-    # TODO: Change mot to a separate table
-    mot_code = Column(String(), nullable=True)
-    mot_desc = Column(String(), nullable=True)
-
     commodity_id = Column(Integer, ForeignKey('commodity.id'), index=True)
     commodity = relationship(Commodity)
 
@@ -86,6 +96,18 @@ class TradeStat(Base, PrimaryKeyBase):
     # Apparently there's also an alt of this???
     alt_quantity_desc_id = Column(Integer, ForeignKey('quantity_code.id'), nullable=True)
     alt_quantity_desc = relationship(QuantityCode, foreign_keys=[alt_quantity_desc_id])
+
+    mot_code_id = Column(Integer, ForeignKey('mot_code.id'), nullable=True)
+    mot_code = relationship(MOTCode)
+
+    mos_code_id = Column(Integer, ForeignKey('mos_code.id'), nullable=True)
+    mos_code = relationship(MOTCode)
+
+    cst_code_id = Column(Integer, ForeignKey('cst_code.id'), nullable=True)
+    cst_code = relationship(MOTCode)
+
+    flow_code_id = Column(Integer, ForeignKey('flow_code.id'), nullable=True)
+    flow_code = relationship(MOTCode)
 
     quantity = Column(Integer, nullable=True)
     alt_quantity = Column(Integer, nullable=True)
