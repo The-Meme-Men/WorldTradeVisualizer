@@ -17,6 +17,10 @@ import json
 # result = requests.get('https://comtrade.un.org/api/get/plus', params=parameters)
 # print(json.dumps(result.json(), indent=2))
 
-from scripts.initial_data_scripts.countries import get_countries
+#from scripts.initial_data_scripts.countries import get_countries
 
-get_countries()
+#get_countries()
+
+from scripts.initial_data_scripts.availability import get_availability
+
+get_availability()
