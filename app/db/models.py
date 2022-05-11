@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, ForeignKey, String, Boolean, DateTime
+from sqlalchemy import Column, Date, Integer, ForeignKey, String, Boolean, DateTime
 from sqlalchemy.orm import relation, relationship
 import datetime
 import enum
@@ -132,3 +132,44 @@ class TradeStat(Base, PrimaryKeyBase):
 
     inserted = Column(DateTime, default=datetime.datetime.now())
 
+
+### TODO: Check data model against this example result:
+'''
+{'type': 'COMMODITIES', 'freq': 'ANNUAL', 'px': 'HS', 'r': '12', 'rDesc': 'Algeria', 'ps': '1992', 'TotalRecords': 43628, 'isOriginal': 0, 'publicationDate': '2002-09-01T00:00:00', 'isPartnerDetail': 1}
+
+type Ignored (can infer from px)
+freq => Stored as A/M
+px => FK to comm_class_code
+r  => FK to country
+rDesc Ignored
+ps => Stored as Integer
+TotalRecords => Stored as Integer
+isOriginal => Stored as Bool
+publicationDate => Stored as Date
+isPartnerDetail => Stored as Bool
+
+ADDED
+inserted => Bool (Marks whether this set of records has been inserted into the DB or not)
+'''
+class AvailabilityRecord(Base, PrimaryKeyBase):
+    __tablename__ = 'availability_record'
+
+    frequency = Column(String(length=1)) #Maybe think of a better way to do this
+
+    com_class_code_id = Column(String(length=16), ForeignKey('comm_class_code.id'))
+    com_class_code = relationship(CommClassCode)
+
+    reporter_id = Column(Integer, ForeignKey('country.id'), index=True)
+    reporter = relationship(Country, foreign_keys=[reporter_id])
+
+    period = Column(Integer) 
+
+    total_records = Column(Integer)
+
+    is_original = Column(Boolean)
+
+    publication_date = Column(Date)
+
+    is_partner_detail = Column(Boolean)
+
+    inserted = Column(Boolean)
