@@ -1,3 +1,4 @@
 {
-    "connection_string": "1234"
+    "connection_string": "1234",
+    "comtrade_api_key": "1234"
 }
