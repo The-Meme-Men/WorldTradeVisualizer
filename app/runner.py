@@ -16,19 +16,7 @@ import json
 #
 # result = requests.get('https://comtrade.un.org/api/get/plus', params=parameters)
 # print(json.dumps(result.json(), indent=2))
-from db.database_connection import initialize, create_session
-from db.models import Country
-from db.db_utils import get_or_create
 
-nested = requests.get('https://comtrade.un.org/Data/cache/partnerAreas.json')
-nested.encoding = 'utf-8-sig'
-nested = json.loads(nested.text)['results']
-flattened = [{'id':el['id'], 'text': el['text']} for el in nested]
-print(flattened)
-initialize()
-session = create_session()
-for result in flattened:
-    country, created = get_or_create(session, Country, country_id=result['id'], name=result['text'])
-    country.partner = True
-session.commit()
-session.close()
+from scripts.initial_data_scripts.countries import get_countries
+
+get_countries()
