@@ -156,10 +156,10 @@ class AvailabilityRecord(Base, PrimaryKeyBase):
 
     frequency = Column(String(length=1), index=True) #Maybe think of a better way to do this
 
-    com_class_code_id = Column(String(length=16), ForeignKey('comm_class_code.id'), index=True)
+    com_class_code_id = Column(String(length=16), ForeignKey('comm_class_code.code_class'), index=True)
     com_class_code = relationship(CommClassCode)
 
-    reporter_id = Column(Integer, ForeignKey('country.id'), index=True)
+    reporter_id = Column(Integer, ForeignKey('country.country_id'), index=True)
     reporter = relationship(Country, foreign_keys=[reporter_id])
 
     period = Column(Integer, index=True) 
