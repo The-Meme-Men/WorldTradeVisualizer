@@ -4,6 +4,9 @@
 # Ignore cred file
 app/util/cred.json
 
+# Ignore test jupyter notebook
+app/test_notebook.ipynb
+
 # Ignore cert file
 app/util/ca-certificate.crt
 
