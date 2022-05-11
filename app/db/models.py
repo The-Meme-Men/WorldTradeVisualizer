@@ -154,15 +154,15 @@ inserted => Bool (Marks whether this set of records has been inserted into the D
 class AvailabilityRecord(Base, PrimaryKeyBase):
     __tablename__ = 'availability_record'
 
-    frequency = Column(String(length=1)) #Maybe think of a better way to do this
+    frequency = Column(String(length=1), index=True) #Maybe think of a better way to do this
 
-    com_class_code_id = Column(String(length=16), ForeignKey('comm_class_code.id'))
+    com_class_code_id = Column(String(length=16), ForeignKey('comm_class_code.id'), index=True)
     com_class_code = relationship(CommClassCode)
 
     reporter_id = Column(Integer, ForeignKey('country.id'), index=True)
     reporter = relationship(Country, foreign_keys=[reporter_id])
 
-    period = Column(Integer) 
+    period = Column(Integer, index=True) 
 
     total_records = Column(Integer)
 
@@ -172,4 +172,4 @@ class AvailabilityRecord(Base, PrimaryKeyBase):
 
     is_partner_detail = Column(Boolean)
 
-    inserted = Column(Boolean)
+    inserted = Column(Boolean, index=True)
