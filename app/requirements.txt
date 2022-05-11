@@ -22,3 +22,6 @@ dash-bootstrap-templates==1.0.5
 
 # Pymongo (Used for migrations)
 pymongo[srv]==4.1.0
+
+# Helper libraries
+alive_progress

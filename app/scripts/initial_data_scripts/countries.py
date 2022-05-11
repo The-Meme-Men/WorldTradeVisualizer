@@ -14,11 +14,9 @@ def get_countries():
     flattened = [{'id': el['id'], 'text': el['text']} for el in nested]
     print('Got Reporters from API')
 
-    initialize()
     session = create_session()
     for result in flattened:
-        country = Country(country_id=result['id'], name=result['text'], reporter=True)
-        session.add(country)
+        country, created = get_or_create(session, Country, country_id=result['id'], name=result['text'], reporter=True)
     session.commit()
 
     print('Created reporter objects')
