@@ -1,13 +1,13 @@
 """Added availability records to DB
-Revision ID: 807c43dc8635
+Revision ID: 0c4f8abf03c0
 Revises: 818137c56e00
-Create Date: 2022-05-11 13:02:50.372142
+Create Date: 2022-05-11 13:05:41.538464
 """
 from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic
-revision = '807c43dc8635'
+revision = '0c4f8abf03c0'
 down_revision = '818137c56e00'
 branch_labels = None
 depends_on = None
@@ -24,8 +24,8 @@ def upgrade() -> None:
     sa.Column('publication_date', sa.Date(), nullable=True),
     sa.Column('is_partner_detail', sa.Boolean(), nullable=True),
     sa.Column('inserted', sa.Boolean(), nullable=True),
-    sa.ForeignKeyConstraint(['com_class_code_id'], ['comm_class_code.id'], ),
-    sa.ForeignKeyConstraint(['reporter_id'], ['country.id'], ),
+    sa.ForeignKeyConstraint(['com_class_code_id'], ['comm_class_code.code_class'], ),
+    sa.ForeignKeyConstraint(['reporter_id'], ['country.country_id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_availability_record_com_class_code_id'), 'availability_record', ['com_class_code_id'], unique=False)
