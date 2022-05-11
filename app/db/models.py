@@ -11,65 +11,72 @@ class PrimaryKeyBase:
     id = Column(Integer, primary_key=True, autoincrement=True)
 
 
-class Country(Base):
+class CommClassCode(Base, PrimaryKeyBase):
+    __tablename__ = 'comm_class_code'
+    code_class = Column(String(length=16), nullable=False)
+
+
+class Country(Base, PrimaryKeyBase):
     __tablename__ = 'country'
     # Country IDs from comtrade
-    country_id = Column(Integer, unique=True, primary_key=True)
+    country_id = Column(String(length=8), unique=True, index=True)
     name = Column(String(length=64), unique=True, nullable=False, index=True)
     iso = Column(String(length=16), unique=True, nullable=True, index=True)
+    reporter = Column(Boolean, default=False)
+    partner = Column(Boolean, default=False)
 
 
-class Commodity(Base):
+class Commodity(Base, PrimaryKeyBase):
     __tablename__ = 'commodity'
     description = Column(String(length=256), unique=True, index=True)
-    comtrade_code = Column(String(length=32), unique=True, primary_key=True)
+    comtrade_code = Column(String(length=32), unique=True, index=True)
+    comm_class_code_id = Column(Integer, ForeignKey('comm_class_code.id'), nullable=False)
+    comm_class_code = relationship(CommClassCode)
 
 
-class RGCode(Base):
+class RGCode(Base, PrimaryKeyBase):
     __tablename__ = 'rg_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(Integer, unique=True, nullable=False, index=True)
     description = Column(String(64), unique=True, nullable=False)
     # Flow code supplied by excel sheet
     flow_code = Column(String(length=4), unique=True)
 
 
-class QuantityCode(Base):
+class QuantityCode(Base, PrimaryKeyBase):
     __tablename__ = 'quantity_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(Integer, unique=True, nullable=False, index=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
-class MOTCode(Base):
+class MOTCode(Base, PrimaryKeyBase):
     __tablename__ = 'mot_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(Integer, unique=True, nullable=False, index=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
-class MOSCode(Base):
+class MOSCode(Base, PrimaryKeyBase):
     __tablename__ = 'mos_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(Integer, unique=True, nullable=False, index=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
-class CSTCode(Base):
+class CSTCode(Base, PrimaryKeyBase):
     __tablename__ = 'cst_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(Integer, unique=True, nullable=False, index=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
-class FlowCode(Base):
-    __tablename__ = 'flow_coded'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+class FlowCode(Base, PrimaryKeyBase):
+    __tablename__ = 'flow_code'
+    code = Column(Integer, unique=True, nullable=False, index=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
 class TradeStat(Base, PrimaryKeyBase):
     __tablename__ = 'trade_stat'
 
-    pf_code = Column(String(length=32))
     year = Column(Integer, index=True, nullable=False)
     period = Column(Integer)
-    period_desc = Column(String)
     aggregation_level = Column(Integer)
     is_leaf = Column(Boolean)
 
@@ -101,13 +108,13 @@ class TradeStat(Base, PrimaryKeyBase):
     mot_code = relationship(MOTCode)
 
     mos_code_id = Column(Integer, ForeignKey('mos_code.id'), nullable=True)
-    mos_code = relationship(MOTCode)
+    mos_code = relationship(MOSCode)
 
     cst_code_id = Column(Integer, ForeignKey('cst_code.id'), nullable=True)
-    cst_code = relationship(MOTCode)
+    cst_code = relationship(CSTCode)
 
     flow_code_id = Column(Integer, ForeignKey('flow_code.id'), nullable=True)
-    flow_code = relationship(MOTCode)
+    flow_code = relationship(FlowCode)
 
     quantity = Column(Integer, nullable=True)
     alt_quantity = Column(Integer, nullable=True)
