@@ -1,13 +1,13 @@
-"""Initial Migration
-Revision ID: 9348392480f9
+"""Initial migration
+Revision ID: 916348607b61
 Revises: 
-Create Date: 2022-05-11 14:30:35.808252
+Create Date: 2022-05-11 22:53:21.741794
 """
 from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic
-revision = '9348392480f9'
+revision = '916348607b61'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,21 +30,22 @@ def upgrade() -> None:
     op.create_index(op.f('ix_country_iso'), 'country', ['iso'], unique=True)
     op.create_index(op.f('ix_country_name'), 'country', ['name'], unique=True)
     op.create_table('cst_code',
-    sa.Column('code', sa.Integer(), nullable=False),
+    sa.Column('code', sa.String(length=4), nullable=False),
     sa.Column('description', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('code'),
     sa.UniqueConstraint('code'),
     sa.UniqueConstraint('description')
     )
     op.create_table('flow_code',
-    sa.Column('code', sa.Integer(), nullable=False),
+    sa.Column('code', sa.String(length=4), nullable=False),
     sa.Column('description', sa.String(length=64), nullable=False),
+    sa.Column('category', sa.String(length=4), nullable=True),
     sa.PrimaryKeyConstraint('code'),
     sa.UniqueConstraint('code'),
     sa.UniqueConstraint('description')
     )
     op.create_table('mos_code',
-    sa.Column('code', sa.Integer(), nullable=False),
+    sa.Column('code', sa.String(length=16), nullable=False),
     sa.Column('description', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('code'),
     sa.UniqueConstraint('code'),
@@ -60,10 +61,12 @@ def upgrade() -> None:
     op.create_table('quantity_code',
     sa.Column('code', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=64), nullable=False),
+    sa.Column('abbreviation', sa.String(length=16), nullable=True),
     sa.PrimaryKeyConstraint('code'),
     sa.UniqueConstraint('code'),
     sa.UniqueConstraint('description')
     )
+    op.create_index(op.f('ix_quantity_code_abbreviation'), 'quantity_code', ['abbreviation'], unique=False)
     op.create_table('rg_code',
     sa.Column('code', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=64), nullable=False),
@@ -95,7 +98,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_availability_record_reporter_id'), 'availability_record', ['reporter_id'], unique=False)
     op.create_table('commodity',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('description', sa.String(length=512), nullable=True),
+    sa.Column('description', sa.String(length=2048), nullable=True),
     sa.Column('comtrade_code', sa.String(length=32), nullable=True),
     sa.Column('comm_class_code_id', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['comm_class_code_id'], ['comm_class_code.code_class'], ),
@@ -118,9 +121,9 @@ def upgrade() -> None:
     sa.Column('quantity_desc_id', sa.Integer(), nullable=True),
     sa.Column('alt_quantity_desc_id', sa.Integer(), nullable=True),
     sa.Column('mot_code_id', sa.Integer(), nullable=True),
-    sa.Column('mos_code_id', sa.Integer(), nullable=True),
-    sa.Column('cst_code_id', sa.Integer(), nullable=True),
-    sa.Column('flow_code_id', sa.Integer(), nullable=True),
+    sa.Column('mos_code_id', sa.String(length=16), nullable=True),
+    sa.Column('cst_code_id', sa.String(length=4), nullable=True),
+    sa.Column('flow_code_id', sa.String(), nullable=True),
     sa.Column('quantity', sa.Integer(), nullable=True),
     sa.Column('alt_quantity', sa.Integer(), nullable=True),
     sa.Column('net_weight', sa.Integer(), nullable=True),
@@ -169,6 +172,7 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_availability_record_com_class_code_id'), table_name='availability_record')
     op.drop_table('availability_record')
     op.drop_table('rg_code')
+    op.drop_index(op.f('ix_quantity_code_abbreviation'), table_name='quantity_code')
     op.drop_table('quantity_code')
     op.drop_table('mot_code')
     op.drop_table('mos_code')

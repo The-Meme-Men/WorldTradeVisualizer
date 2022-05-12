@@ -7,7 +7,7 @@ from db.db_utils import get_or_create
 
 from alive_progress import alive_bar
 
-hs_codes = ['HS', 'H0', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'ST', 'S1', 'S2', 'S3', 'BEC', 'EB02']
+hs_codes = ['HS', 'H0', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'ST', 'S1', 'S2', 'S3', 'S4', 'ST', 'BEC', 'EB02']
 
 def get_hs_and_comm_codes():
 

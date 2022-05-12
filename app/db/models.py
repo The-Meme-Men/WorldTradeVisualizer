@@ -29,7 +29,7 @@ class Country(Base):
 
 class Commodity(Base, PrimaryKeyBase):
     __tablename__ = 'commodity'
-    description = Column(String(length=1024), index=True)
+    description = Column(String(length=2048), index=True)
     comtrade_code = Column(String(length=32), index=True)
     comm_class_code_id = Column(String, ForeignKey('comm_class_code.code_class'), nullable=False)
     comm_class_code = relationship(CommClassCode)
@@ -60,20 +60,22 @@ class MOTCode(Base):
 
 class MOSCode(Base):
     __tablename__ = 'mos_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(String(16), unique=True, nullable=False, primary_key=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
 class CSTCode(Base):
+    # Customs code
     __tablename__ = 'cst_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(String(4), unique=True, nullable=False, primary_key=True)
     description = Column(String(64), unique=True, nullable=False)
 
 
 class FlowCode(Base):
     __tablename__ = 'flow_code'
-    code = Column(Integer, unique=True, nullable=False, primary_key=True)
+    code = Column(String(4), unique=True, nullable=False, primary_key=True)
     description = Column(String(64), unique=True, nullable=False)
+    category = Column(String(4), nullable=True)
 
 
 class TradeStat(Base, PrimaryKeyBase):
@@ -111,13 +113,13 @@ class TradeStat(Base, PrimaryKeyBase):
     mot_code_id = Column(Integer, ForeignKey('mot_code.code'), nullable=True)
     mot_code = relationship(MOTCode)
 
-    mos_code_id = Column(Integer, ForeignKey('mos_code.code'), nullable=True)
+    mos_code_id = Column(String(16), ForeignKey('mos_code.code'), nullable=True)
     mos_code = relationship(MOSCode)
 
-    cst_code_id = Column(Integer, ForeignKey('cst_code.code'), nullable=True)
+    cst_code_id = Column(String(4), ForeignKey('cst_code.code'), nullable=True)
     cst_code = relationship(CSTCode)
 
-    flow_code_id = Column(Integer, ForeignKey('flow_code.code'), nullable=True)
+    flow_code_id = Column(String, ForeignKey('flow_code.code'), nullable=True)
     flow_code = relationship(FlowCode)
 
     quantity = Column(Integer, nullable=True)
