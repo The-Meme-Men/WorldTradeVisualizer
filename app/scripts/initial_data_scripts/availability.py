@@ -20,16 +20,17 @@ def get_availability():
     with alive_bar(total=len(all_avail_records)) as bar:
         for num, record in enumerate(all_avail_records):
             avail_record, created = get_or_create(session, AvailabilityRecord, 
-                frequency=record['freq'], 
-                com_class_code=record['px'], 
-                reporter=record['r'], 
+                frequency='A' if record['freq'] == 'ANNUAL' else 'M',
+                com_class_code_id=record['px'],
+                reporter_id=record['r'],
                 period=record['ps'],
-                is_original=record['isOriginal']
+                # DB is expecting Boolean values, but API returns integers
+                is_original=bool(record['isOriginal'])
             )
             if created:
                 created_recs += 1
                 avail_record.total_records = record['TotalRecords']
-                avail_record.publication_date = datetime.strptime(record['publicationDate'], '%Y-%m-%dT%H-%M-%S')
+                avail_record.publication_date = datetime.strptime(record['publicationDate'], '%Y-%m-%dT%H:%M:%S')
                 avail_record.is_partner_detail = record['isPartnerDetail']
                 avail_record.inserted = False
             else:
