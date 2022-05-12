@@ -29,7 +29,7 @@ class Country(Base):
 
 class Commodity(Base, PrimaryKeyBase):
     __tablename__ = 'commodity'
-    description = Column(String(length=512), index=True)
+    description = Column(String(length=1024), index=True)
     comtrade_code = Column(String(length=32), index=True)
     comm_class_code_id = Column(String, ForeignKey('comm_class_code.code_class'), nullable=False)
     comm_class_code = relationship(CommClassCode)
@@ -49,6 +49,7 @@ class QuantityCode(Base):
     __tablename__ = 'quantity_code'
     code = Column(Integer, unique=True, nullable=False, primary_key=True)
     description = Column(String(64), unique=True, nullable=False)
+    abbreviation = Column(String(16), index=True)
 
 
 class MOTCode(Base):

@@ -1,8 +1,11 @@
 import requests
 import json
+import time
 from db.database_connection import initialize, create_session
 from db.models import Country
 from db.db_utils import get_or_create
+
+from alive_progress import alive_bar
 
 
 def get_countries():
@@ -15,8 +18,10 @@ def get_countries():
     print('Got Reporters from API')
 
     session = create_session()
-    for result in flattened:
-        country, created = get_or_create(session, Country, country_id=result['id'], name=result['text'], reporter=True)
+    with alive_bar(total=len(flattened)) as bar:
+        for result in flattened:
+            country, created = get_or_create(session, Country, country_id=result['id'], name=result['text'], reporter=True)
+            bar()
     session.commit()
 
     print('Created reporter objects')
@@ -28,9 +33,11 @@ def get_countries():
     flattened = [{'id': el['id'], 'text': el['text']} for el in nested]
     print('Got partners from API')
 
-    for result in flattened:
-        country, created = get_or_create(session, Country, country_id=result['id'], name=result['text'])
-        country.partner = True
+    with alive_bar(total=len(flattened)) as bar:
+        for result in flattened:
+            country, created = get_or_create(session, Country, country_id=result['id'], name=result['text'])
+            country.partner = True
+            bar()
     print('Got all')
     session.commit()
     session.close()
