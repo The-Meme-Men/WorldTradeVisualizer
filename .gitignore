@@ -10,6 +10,9 @@ app/test_notebook.ipynb
 # Ignore cert file
 app/util/ca-certificate.crt
 
+# Ignore analysis results
+app/analysis_results
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
